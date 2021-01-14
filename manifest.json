@@ -1,0 +1,11 @@
+{
+    "name": "Odissey Music Extension",
+    "version": "1.0",
+    "description": "A Spotify music extension for chrome users",
+    "manifest_version": 2,
+    "background":{
+        "page": "background.html",
+        "persistent": false
+    },
+    "omnibox":{ "keyword": "@odyssey"}
+}
