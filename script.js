@@ -1,12 +1,41 @@
+function playNextSong(){
+    chrome.runtime.sendMessage({name: "SongList"}, (response) => {
+        //Wait for response
+        console.log(response);
+        if (response == "Empty List" || response == "No Next Song"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        document.getElementById('myiframe').src = response;
+    });
+}
+
+document.getElementById('nextButton').addEventListener('click', playNextSong);
+
 // Event that receives the text of the chosen song
+
+/*
 chrome.runtime.onMessage.addListener(
     (request, sender, sendResponse) => {
         updateSongSource(request.message); 
-        sendResponse({message: "hi to you"});
     });
+
 
 // Auxiliar funtion that updates the html (with the spotify audio)
 function updateSongSource(text){
     var newSrc = 'https://open.spotify.com/embed/track/'+ text;
     document.getElementById('myiframe').src = newSrc;
 }
+*/
+
+chrome.runtime.sendMessage({name: "SongList"}, (response) => {
+    //Wait for response
+    console.log(response);
+    if (response == "Empty List"){ // || response == "No Next Song"){
+        document.getElementById('titleH1').innerHTML = response;
+    }
+    else{
+        document.getElementById('myiframe').src = response;
+    }
+});
+
+

@@ -4,6 +4,8 @@ function getSuggestString(data){
     return songStr + artistStr;
 }
 
+var songList = []
+
 // Omnibox listener, used everytime the omnibox's text is updated
 chrome.omnibox.onInputChanged.addListener(
     function(text, suggest) {
@@ -39,5 +41,24 @@ chrome.omnibox.onInputChanged.addListener(
   // A message is send through the extension (received in script.js)
   chrome.omnibox.onInputEntered.addListener(
     function(text) {
-        chrome.runtime.sendMessage({message: text}, (response) => {});  
+        songList.push('https://open.spotify.com/embed/track/'+text);
+        //chrome.runtime.sendMessage({message: text}, (response) => {});  
   });
+
+chrome.runtime.onMessage.addListener((msg, sender, response) =>{
+
+    if(msg.name == "SongList"){
+
+        if (songList.length == 0){
+            response("Empty List");
+        }
+        else if (songList.length == 1){
+            response(songList[0]);
+        }
+        else{
+            songList.shift();
+            response(songList[0]);
+        }
+
+    }
+});
