@@ -7,5 +7,8 @@
         "page": "background.html",
         "persistent": false
     },
-    "omnibox":{ "keyword": "odi"}
+    "omnibox":{ "keyword": "@odyssey"},
+    "chrome_url_overrides":{
+        "newtab": "popup.html"
+    }
 }
