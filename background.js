@@ -5,13 +5,13 @@ function getSuggestString(data){
 }
 
 var songList = []
+var currentSong = 0;
 
 // Omnibox listener, used everytime the omnibox's text is updated
 chrome.omnibox.onInputChanged.addListener(
     function(text, suggest) {
 
       // Contructing the get request text
-      console.log('inputChanged: ' + text);
       const apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
       fetch(apiCall).then(function(res){
 
@@ -47,18 +47,28 @@ chrome.omnibox.onInputChanged.addListener(
 
 chrome.runtime.onMessage.addListener((msg, sender, response) =>{
 
-    if(msg.name == "SongList"){
-
-        if (songList.length == 0){
-            response("Empty List");
+    if (songList.length == 0){
+        console.log("Empty list");
+        response("Empty List");
+    }
+    else if(songList.length == 1){
+        response(songList[currentSong]);
+    }
+    else{
+        if(msg.name == "Next Song" & currentSong+1 < songList.length){
+            currentSong+=1;
+            response(songList[currentSong]);
         }
-        else if (songList.length == 1){
-            response(songList[0]);
+        else if (msg.name == "Previous Song" & currentSong !== 0){
+            currentSong-=1;
+            response(songList[currentSong]);
+        }
+        else if(msg.name == "Current Song"){
+            response(songList[currentSong]);
         }
         else{
-            songList.shift();
-            response(songList[0]);
+            response("No Movement");
         }
-
     }
+    
 });

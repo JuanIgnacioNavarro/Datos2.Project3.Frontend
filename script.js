@@ -1,15 +1,52 @@
 function playNextSong(){
-    chrome.runtime.sendMessage({name: "SongList"}, (response) => {
+    chrome.runtime.sendMessage({name: "Next Song"}, (response) => {
         //Wait for response
         console.log(response);
-        if (response == "Empty List" || response == "No Next Song"){
+        if (response == "Empty List"){
             document.getElementById('titleH1').innerHTML = response;
         }
-        document.getElementById('myiframe').src = response;
+        else if(response == "No Movement"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        else{
+            document.getElementById('myiframe').src = response;
+        }
+    });
+}
+
+
+function playPreviousSong(){
+    chrome.runtime.sendMessage({name: "Previous Song"}, (response) =>{
+        if(response == "Empty List"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        else if(response == "No Movement"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        else{
+            document.getElementById('myiframe').src = response;
+        }
+    });
+}
+
+function playCurrentSong(){
+    chrome.runtime.sendMessage({name: "Current Song"}, (response) =>{
+        if(response == "Empty List"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        else if(response == "No Movement"){
+            document.getElementById('titleH1').innerHTML = response;
+        }
+        else{
+            document.getElementById('myiframe').src = response;
+        }
     });
 }
 
 document.getElementById('nextButton').addEventListener('click', playNextSong);
+document.getElementById('previousButton').addEventListener('click', playPreviousSong);
+
+playCurrentSong();
 
 // Event that receives the text of the chosen song
 
@@ -27,6 +64,7 @@ function updateSongSource(text){
 }
 */
 
+/*
 chrome.runtime.sendMessage({name: "SongList"}, (response) => {
     //Wait for response
     console.log(response);
@@ -38,4 +76,4 @@ chrome.runtime.sendMessage({name: "SongList"}, (response) => {
     }
 });
 
-
+*/
