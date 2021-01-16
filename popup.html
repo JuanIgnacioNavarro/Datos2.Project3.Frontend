@@ -4,12 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odyssey Radio</title>
+    <link rel="stylesheet" href="styles.css">
+
   </head>
   <body>
-    <h1 id="titleH1">Song</h1>
-    <button id="previousButton" type="button">Prevoius song</button>
-    <button id="nextButton" type="button">Next song</button>
-   
+    <section>
+      <button id="previousButton" class="myButton" type="button">🡸</button>
+      <button id="nextButton" class="myButton" type="button">🡺</button>
+      <h3 id="playlistCounter"></h3>
+    </section>
+
     <iframe
       id="myiframe"
       width="300"
@@ -18,10 +22,9 @@
       allowtransparency="true"
       allow="encrypted-media"
       autostart="true"
-      volume = 100
+      volume="100"
     ></iframe>
 
-    <button id="increaseButton" type="button">Increase Volume</button>
     <script src="script.js"></script>
   </body>
 </html>

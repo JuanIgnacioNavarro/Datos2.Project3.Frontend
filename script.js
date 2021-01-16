@@ -1,13 +1,27 @@
 function playSong(song){
     chrome.runtime.sendMessage({name: song}, (response) =>{
-        if(response == "Empty List"){
-            document.getElementById('titleH1').innerHTML = response;
+        if(response[1] == response[2]){
+            document.getElementById('nextButton').disabled = true;
+        } else{
+            document.getElementById('nextButton').disabled = false;
         }
-        else if(response == "No Movement"){
-            document.getElementById('titleH1').innerHTML = response;
+        if (response[1] == 1){
+            document.getElementById('previousButton').disabled = true;
+        } else{
+            document.getElementById('previousButton').disabled = false;
+        }
+
+        if(response[0] == "Empty List"){
+            document.getElementById('nextButton').disabled = true;
+            document.getElementById('previousButton').disabled = true;
+            document.getElementById('playlistCounter').innerHTML = "0/0"
+        }
+        else if(response[0] == "No Movement"){
+            document.getElementById('playlistCounter').innerHTML = response[1]+'/'+ response[2];
         }
         else{
-            document.getElementById('myiframe').src = response;
+            document.getElementById('myiframe').src = response[0];
+            document.getElementById('playlistCounter').innerHTML = response[1]+'/'+ response[2];
         }
     });
 }

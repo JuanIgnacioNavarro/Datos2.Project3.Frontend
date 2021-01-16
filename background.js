@@ -1,6 +1,6 @@
 function getSuggestString(data){
     let songStr = "Song: " + data.track_name;
-    let artistStr = " / Artist: " + data.artist;
+    let artistStr = "     /     Artist: " + data.artist;
     return songStr + artistStr;
 }
 
@@ -73,23 +73,23 @@ chrome.runtime.onMessage.addListener((msg, sender, response) =>{
 
     if (songList.length == 0){
         console.log("Empty list");
-        response("Empty List");
+        response(["Empty List", currentSong+1, songList.length]);
         //response(chrome.audio.level);
     }
     else{
         if(msg.name == "Next Song" & currentSong+1 < songList.length){
             currentSong+=1;
-            response(songList[currentSong]);
+            response([songList[currentSong], currentSong+1, songList.length]);
         }
         else if (msg.name == "Previous Song" & currentSong !== 0){
             currentSong-=1;
-            response(songList[currentSong]);
+            response([songList[currentSong], currentSong+1, songList.length]);
         }
         else if(msg.name == "Current Song"){
-            response(songList[currentSong]);
+            response([songList[currentSong], currentSong+1, songList.length]);
         }
         else{
-            response("No Movement");
+            response(["No Movement", currentSong+1, songList.length]);
         }
     }
     
