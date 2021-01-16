@@ -1,22 +1,5 @@
-function playNextSong(){
-    chrome.runtime.sendMessage({name: "Next Song"}, (response) => {
-        //Wait for response
-        console.log(response);
-        if (response == "Empty List"){
-            document.getElementById('titleH1').innerHTML = response;
-        }
-        else if(response == "No Movement"){
-            document.getElementById('titleH1').innerHTML = response;
-        }
-        else{
-            document.getElementById('myiframe').src = response;
-        }
-    });
-}
-
-
-function playPreviousSong(){
-    chrome.runtime.sendMessage({name: "Previous Song"}, (response) =>{
+function playSong(song){
+    chrome.runtime.sendMessage({name: song}, (response) =>{
         if(response == "Empty List"){
             document.getElementById('titleH1').innerHTML = response;
         }
@@ -29,51 +12,26 @@ function playPreviousSong(){
     });
 }
 
-function playCurrentSong(){
-    chrome.runtime.sendMessage({name: "Current Song"}, (response) =>{
-        if(response == "Empty List"){
-            document.getElementById('titleH1').innerHTML = response;
-        }
-        else if(response == "No Movement"){
-            document.getElementById('titleH1').innerHTML = response;
-        }
-        else{
-            document.getElementById('myiframe').src = response;
-        }
-    });
+function playNextAux(){
+    playSong("Next Song");
 }
 
-document.getElementById('nextButton').addEventListener('click', playNextSong);
-document.getElementById('previousButton').addEventListener('click', playPreviousSong);
-
-playCurrentSong();
-
-// Event that receives the text of the chosen song
-
-/*
-chrome.runtime.onMessage.addListener(
-    (request, sender, sendResponse) => {
-        updateSongSource(request.message); 
-    });
-
-
-// Auxiliar funtion that updates the html (with the spotify audio)
-function updateSongSource(text){
-    var newSrc = 'https://open.spotify.com/embed/track/'+ text;
-    document.getElementById('myiframe').src = newSrc;
+function playPreviousAux(){
+    playSong("Previous Song")
 }
-*/
 
-/*
-chrome.runtime.sendMessage({name: "SongList"}, (response) => {
-    //Wait for response
-    console.log(response);
-    if (response == "Empty List"){ // || response == "No Next Song"){
-        document.getElementById('titleH1').innerHTML = response;
-    }
-    else{
-        document.getElementById('myiframe').src = response;
-    }
-});
+//########## changeVolume function is not working, it seems that iframes can't be muted, tried almost everything on internet
 
-*/
+function changeVolume(){
+    
+    var iframe = document.getElementsByTagName('myiframe');
+    iframe.setVolume(0);
+}
+
+//document.getElementById('increaseButton').addEventListener('click', changeVolume);
+
+///########
+document.getElementById('nextButton').addEventListener('click', playNextAux);
+document.getElementById('previousButton').addEventListener('click', playPreviousAux);
+
+playSong("Current Song");
