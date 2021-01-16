@@ -1,13 +1,18 @@
-function getSuggestString(data){
+function suggestionListAux(data){
     let songStr = "Song: " + data.track_name;
     let artistStr = "     /     Artist: " + data.artist;
     return songStr + artistStr;
 }
 
+/**
+ * Returns the omnibox's suggestions (a list of objects)
+ * @param {*} data information received from the request
+ * @param {number} amount ammount of suggestions that will be displayed
+ */
 function suggestionList(data, amount){
     var list = [];
     for (i = 0; i < amount; i++){
-        var object = {content: data[i].id, description: getSuggestString(data[i])};
+        var object = {content: data[i].id, description: suggestionListAux(data[i])};
         list.push(object);
     }
     return list;
@@ -25,7 +30,6 @@ chrome.omnibox.onInputChanged.addListener(
 
       // Constructing the get request text
       if (text == "*"){
-          hasAllKeyword = true;
           text = "";
       }
       var apiCall;
@@ -35,14 +39,12 @@ chrome.omnibox.onInputChanged.addListener(
         apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
       }
       fetch(apiCall).then(function(res){
-
           // If the server is down
           if (res.status !== 200){
               suggest([
                   {content: "None", description: "Something went wrong"}
               ])
           }
-
           // Add the sugestions given by the server
           res.json().then(function(data){
               if(text == ""){
@@ -58,9 +60,6 @@ chrome.omnibox.onInputChanged.addListener(
     });
   
   // This event is fired with the user accepts the input in the omnibox.
-  // A message is send through the extension (received in script.js)
-
-  
   chrome.omnibox.onInputEntered.addListener(
     function(text) {
         if (text.length == 22){
@@ -68,13 +67,10 @@ chrome.omnibox.onInputChanged.addListener(
         }
   });
   
-
 chrome.runtime.onMessage.addListener((msg, sender, response) =>{
-
     if (songList.length == 0){
         console.log("Empty list");
         response(["Empty List", currentSong+1, songList.length]);
-        //response(chrome.audio.level);
     }
     else{
         if(msg.name == "Next Song" & currentSong+1 < songList.length){
@@ -92,5 +88,4 @@ chrome.runtime.onMessage.addListener((msg, sender, response) =>{
             response(["No Movement", currentSong+1, songList.length]);
         }
     }
-    
 });

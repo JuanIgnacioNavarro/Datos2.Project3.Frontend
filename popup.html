@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odyssey Radio</title>
@@ -8,14 +9,15 @@
 
   </head>
   <body>
+
     <section>
-      <button id="previousButton" class="myButton" type="button">🡸</button>
-      <button id="nextButton" class="myButton" type="button">🡺</button>
+      <button id="previousButton" class="playlistButton" type="button">🡸</button>
+      <button id="nextButton" class="playlistButton" type="button">🡺</button>
       <h3 id="playlistCounter"></h3>
     </section>
 
     <iframe
-      id="myiframe"
+      id="iframePlayer"
       width="300"
       height="80"
       frameborder="0"
@@ -26,5 +28,6 @@
     ></iframe>
 
     <script src="script.js"></script>
+
   </body>
 </html>
