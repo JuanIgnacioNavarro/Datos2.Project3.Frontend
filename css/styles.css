@@ -1,19 +1,19 @@
 body,
 html {
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(58,121,9,1) 82%, rgba(104,255,0,1) 100%);  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
+	background: rgb(2,0,36);
+	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(58,121,9,1) 82%, rgba(104,255,0,1) 100%);  display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100%;
 }
 section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 }
 .playlistButton {
-    margin: 1mm;
+	margin: 1mm;
 	box-shadow:inset 0px 1px 0px 0px #a4e271;
 	background:linear-gradient(to bottom, #89c403 5%, #77a809 100%);
 	background-color:#89c403;
@@ -38,8 +38,8 @@ section {
 	top:1px;
 }
 section h3{
-    font-size: 1em;
-    color: bisque;
-    margin: 0;
-    padding: 0;
+	font-size: 1em;
+	color: bisque;
+	margin: 0;
+	padding: 0;
 }

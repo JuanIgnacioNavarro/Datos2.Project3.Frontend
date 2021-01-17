@@ -1,3 +1,7 @@
+/**
+ * Creates a text for suggestions on omnibox
+ * @param {object} data received object from server
+ */
 function suggestionListAux(data){
     let songStr = "Song: " + data.track_name;
     let artistStr = "     /     Artist: " + data.artist;
@@ -15,12 +19,19 @@ function suggestionList(data, amount){
         var object = {content: data[i].id, description: suggestionListAux(data[i])};
         list.push(object);
     }
+    suggestions = list;
     return list;
 }
+
+const TIME_BETWEEN_REQUESTS = 500;
+const AMOUNT_OF_SUGGESTIONS = 5;
+const ALL_SUGGESTIONS = 9;
 
 var songList = []
 var currentSong = 0;
 var hasAllKeyword = false;
+var lastRequestTime = -TIME_BETWEEN_REQUESTS;
+var actualRequestTime;
 
 chrome.omnibox.setDefaultSuggestion({description: "Search a song by its name, artist or lyrics"});
 
@@ -29,6 +40,7 @@ chrome.omnibox.onInputChanged.addListener(
     function(text, suggest) {
 
       // Constructing the get request text
+      actualRequestTime = new Date().getTime();
       if (text == "*"){
           text = "";
       }
@@ -38,34 +50,39 @@ chrome.omnibox.onInputChanged.addListener(
       } else{
         apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
       }
-      fetch(apiCall).then(function(res){
-          // If the server is down
-          if (res.status !== 200){
-              suggest([
-                  {content: "None", description: "Something went wrong"}
-              ])
-          }
-          // Add the sugestions given by the server
-          res.json().then(function(data){
-              if(text == ""){
-                list = suggestionList(data, 9);
-              } else{
-                list = suggestionList(data, 5);
-              }
-              suggest(list);
-          }).catch(function(err) {
-            suggest([{content: 'Error', description: 'There was a problem loading the server'}]);
-        });
-      })
-    });
-  
-  // This event is fired with the user accepts the input in the omnibox.
-  chrome.omnibox.onInputEntered.addListener(
-    function(text) {
-        if (text.length == 22){
-            songList.push('https://open.spotify.com/embed/track/'+text);
-        }
-  });
+      if (actualRequestTime - lastRequestTime > TIME_BETWEEN_REQUESTS){
+          lastRequestTime = actualRequestTime;
+        fetch(apiCall).then(function(res){
+            // If the server is down
+            if (res.status !== 200){
+                suggest([
+                    {content: "None", description: "Something went wrong"}
+                ])
+            }
+            // Add the sugestions given by the server
+            res.json().then(function(data){
+                if(text == ""){
+                  list = suggestionList(data, ALL_SUGGESTIONS);
+                } else{
+                  list = suggestionList(data, AMOUNT_OF_SUGGESTIONS);
+                }
+                suggest(list);
+            }).catch(function(err) {
+              suggest([{content: 'Error', description: 'There was a problem loading the server'}]);
+          });
+        })
+      }
+      else{
+        suggest(suggestions);
+      }  
+});
+
+// This event is fired with the user accepts the input in the omnibox.
+chrome.omnibox.onInputEntered.addListener(
+function(text) {
+    songList.push('https://open.spotify.com/embed/track/'+text);
+
+});
   
 chrome.runtime.onMessage.addListener((msg, sender, response) =>{
     if (songList.length == 0){
