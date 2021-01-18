@@ -23,14 +23,14 @@ function suggestionList(data, amount){
     return list;
 }
 
-const TIME_BETWEEN_REQUESTS = 500;
-const AMOUNT_OF_SUGGESTIONS = 5;
+const TIME_BETWEEN_REQUESTS = 1000;
+const AMOUNT_OF_SUGGESTIONS = 4;
 const ALL_SUGGESTIONS = 9;
 
 var songList = []
 var currentSong = 0;
 var hasAllKeyword = false;
-var lastRequestTime = -TIME_BETWEEN_REQUESTS;
+var lastRequestTime = new Date().getTime() - TIME_BETWEEN_REQUESTS;
 var actualRequestTime;
 
 chrome.omnibox.setDefaultSuggestion({description: "Search a song by its name, artist or lyrics"});
@@ -41,16 +41,13 @@ chrome.omnibox.onInputChanged.addListener(
 
       // Constructing the get request text
       actualRequestTime = new Date().getTime();
+      console.log(actualRequestTime);
       if (text == "*"){
           text = "";
       }
       var apiCall;
-      if (text.length >20){
-        apiCall = 'http://localhost:3050/tracks/search/lyrics?key='+ text +'&user_id=0'
-      } else{
-        apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
-      }
-      if (actualRequestTime - lastRequestTime > TIME_BETWEEN_REQUESTS){
+      apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
+      if (actualRequestTime - lastRequestTime >= TIME_BETWEEN_REQUESTS){
           lastRequestTime = actualRequestTime;
         fetch(apiCall).then(function(res){
             // If the server is down
