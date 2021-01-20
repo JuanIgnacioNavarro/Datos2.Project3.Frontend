@@ -16,5 +16,9 @@
     "browser_action":{
         "default_icon": "images/odyssey-logo16.png",
         "default_popup": "html/popup.html"
-    }
+    },
+    "permissions": [
+        "identity",
+        "identity.email"
+    ]
 }

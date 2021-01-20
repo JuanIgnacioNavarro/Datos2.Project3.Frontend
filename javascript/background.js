@@ -32,6 +32,15 @@ var currentSong = 0;
 var hasAllKeyword = false;
 var lastRequestTime = new Date().getTime() - TIME_BETWEEN_REQUESTS;
 var actualRequestTime;
+var userEmail = ''
+
+// This events is in charge of getting the current signed in google account
+chrome.identity.getProfileUserInfo(function(info) { userEmail = info.email; });
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+    sendResponse( {userEmail: userEmail})
+    console.log(userEmail)
+});
 
 chrome.omnibox.setDefaultSuggestion({description: "Search a song by its name, artist or lyrics"});
 
@@ -46,7 +55,7 @@ chrome.omnibox.onInputChanged.addListener(
           text = "";
       }
       var apiCall;
-      apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=0'
+      apiCall = 'http://localhost:3050/tracks/search?key='+ text +'&user_id=' + userEmail
       if (actualRequestTime - lastRequestTime >= TIME_BETWEEN_REQUESTS){
           lastRequestTime = actualRequestTime;
         fetch(apiCall).then(function(res){
